@@ -7,7 +7,7 @@ from threading import Thread
 from urllib.parse import unquote
 from bs4 import BeautifulSoup
 
-L_YEAR = '2017'                             #   Lower Year Limit
+L_YEAR = '2012'                             #   Lower Year Limit
 U_YEAR = '2019'                             #   Upper Year Limit
 SEM = 'V Sem'                             #   Semester
 BRANCH = 'IT'                               #   Branch 
@@ -24,7 +24,7 @@ proxy_data.update({'user': u,'pass': p})
 #   Branch Codes
 BRANCHES = {
     'AEO':'Aeronautical.+',
-    'ACH':'Architecture',
+    'ACH':'Architecture.+',
     'AUM':'Automobile.+',
     'BME':'Biomedical.+',
     'BTE':'Biotechnology.+',
@@ -37,7 +37,7 @@ BRANCHES = {
     'FD':'Fashion.+',
     'IP':'Industrial.+',
     'IT': 'Information.+',
-    'ICE':'Instrumentation ',
+    'ICE':'Instrumentation.+',
     'ID':'Interior.+',
     'MME':'Mechanical+.',
     'MCT':'Mechatronics.+',

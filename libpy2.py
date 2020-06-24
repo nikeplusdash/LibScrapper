@@ -7,10 +7,10 @@ from threading import Thread
 from urllib.parse import unquote
 from bs4 import BeautifulSoup
 
-L_YEAR = '2017'                             #   Lower Year Limit
+L_YEAR = '2012'                             #   Lower Year Limit
 U_YEAR = '2019'                             #   Upper Year Limit
-SEM = 'I Sem'                              #   Semester
-BRANCH = 'AEO'                               #   Branch 
+SEM = 'V Sem'                             #   Semester
+BRANCH = 'IT'                               #   Branch 
 
 #   Create a login.txt file containing username and password
 #   in following format:
@@ -24,7 +24,7 @@ proxy_data.update({'user': u,'pass': p})
 #   Branch Codes
 BRANCHES = {
     'AEO':'Aeronautical.+',
-    'ACH':'Architecture',
+    'ACH':'Architecture.+',
     'AUM':'Automobile.+',
     'BME':'Biomedical.+',
     'BTE':'Biotechnology.+',
@@ -37,7 +37,7 @@ BRANCHES = {
     'FD':'Fashion.+',
     'IP':'Industrial.+',
     'IT': 'Information.+',
-    'ICE':'Instrumentation ',
+    'ICE':'Instrumentation.+',
     'ID':'Interior.+',
     'MME':'Mechanical+.',
     'MCT':'Mechatronics.+',
@@ -71,29 +71,27 @@ def thread_func(i,data,year):
     data = getDetails(soup3)
     try:
         # Finding if Semester exists
-        ID = soup3.find(text=re.compile(SEM)).parent['id'].replace('_','$')
+        ID = soup3.find(text=re.compile('^\\s{}$'.format(SEM))).parent['id'].replace('_','$')
         data.update({'__EVENTTARGET':ID})
         soup4 = BeautifulSoup(s.post(LIB_LINK,data=data).text,'html.parser')
         URLs = list()
         # Finding if Branch exists
         if ((SEM != 'I Sem')&(SEM != 'II Sem')):
             ID = soup4.find(text=re.compile(BRANCHES[BRANCH])).parent['id'].replace('_','$')
-            if not os.path.isdir('./PDF_'+BRANCH+'/'+str(year)+'/'+SEM):
-                os.makedirs('./PDF_'+BRANCH+'/'+str(year)+'/'+SEM)
             data = getDetails(soup4)
             data.update({'__EVENTTARGET':ID})
             soup5 = BeautifulSoup(s.post(LIB_LINK,data=data).text,'html.parser')
             URLs = getURL(soup5)
         else:
-            if not os.path.isdir('./PDF_'+BRANCH+'/'+str(year)+'/'+SEM):
-                os.makedirs('./PDF_'+BRANCH+'/'+str(year)+'/'+SEM)
             URLs = getURL(soup4)
         with requests.Session() as s2:
             s2.get(PROXY_SERVER,verify=False)
             s2.post(PROXY_SERVER,data=proxy_data,verify=False)
+            if not os.path.isdir('./PDF/' + BRANCH + '/' + SEM + '/' + str(year)):
+                os.makedirs('./PDF/' + BRANCH + '/'+ SEM + '/' + str(year))
             for j in URLs:
                 r = s2.get(j,verify=False,stream=True)
-                name = './PDF_'+BRANCH+'/'+str(year)+'/'+SEM+'/'+unquote(j.split('/')[-1])
+                name = './PDF/' + BRANCH + '/' + SEM + '/' + str(year) + '/' + unquote(j.split('/')[-1])
                 with open(name,"wb") as f:
                     f.write(r.content)
                 f.close()
@@ -101,9 +99,6 @@ def thread_func(i,data,year):
         pass
 
 with requests.Session() as s:
-    # Creating PDF folder
-    if not os.path.isdir('./PDF_'+BRANCH):
-        os.makedirs('./PDF_'+BRANCH)
     # Login
     s.get(PROXY_SERVER,verify=False)
     s.post(PROXY_SERVER,data=proxy_data,verify=False)
@@ -113,10 +108,6 @@ with requests.Session() as s:
     years = getList(nav_years)
     nav_years = [i['id'].replace('_','$') for i in nav_years[years.index(L_YEAR):years.index(U_YEAR)+1]]
     years = years[years.index(L_YEAR):years.index(U_YEAR)+1]
-    # Creation of Year Folders
-    for i in years:
-        if not os.path.isdir('./PDF_'+BRANCH+'/'+str(i)):
-            os.makedirs('./PDF_'+BRANCH+'/'+str(i))
     t1 = []
     # Thread to navigate each year
     for i,y in enumerate(nav_years):
@@ -126,5 +117,3 @@ with requests.Session() as s:
     for i in t1:
         i.join()
     print('- - - - - D o n e - - - - -')
-
-        
