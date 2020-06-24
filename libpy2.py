@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 L_YEAR = '2012'                             #   Lower Year Limit
 U_YEAR = '2019'                             #   Upper Year Limit
 SEM = 'V Sem'                             #   Semester
-BRANCH = 'IT'                               #   Branch 
+BRANCH = 'CCE'                               #   Branch 
 
 #   Create a login.txt file containing username and password
 #   in following format:
