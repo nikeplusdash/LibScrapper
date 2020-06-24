@@ -6,7 +6,7 @@ If any issues please report
 
 ## How to use
 
-:heavy_exclamation_mark: Both Libpy1 and Lobpy2 give the same result, the difference is in segregation and creation of year folders :heavy_exclamation_mark:
+:heavy_exclamation_mark: Both Libpy1 and Libpy2 give the same result, the difference is in segregation and creation of year folders :heavy_exclamation_mark:
 
 1. Create a login.txt file containing "{username} {password}" for MITlibproxy as described in the respective py file.
 2. Edit the values in the python file according to sem and branch.
