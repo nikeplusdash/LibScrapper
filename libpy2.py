@@ -7,10 +7,11 @@ from threading import Thread
 from urllib.parse import unquote
 from bs4 import BeautifulSoup
 
-L_YEAR = '2012'                             #   Lower Year Limit
-U_YEAR = '2019'                             #   Upper Year Limit
-SEM = 'V Sem'                             #   Semester
-BRANCH = 'CCE'                               #   Branch 
+L_YEAR = '2012'                                                 #   Lower Year Limit
+U_YEAR = '2019'                                                 #   Upper Year Limit
+SEM = 'V Sem'                                                   #   Semester
+BRANCH = 'AEO'                                                  #   Branch 
+DIRECTORY = './PDF/' + BRANCH + '/' + SEM + '/'                 #   Customise the directory as per your need
 
 #   Create a login.txt file containing username and password
 #   in following format:
@@ -87,11 +88,11 @@ def thread_func(i,data,year):
         with requests.Session() as s2:
             s2.get(PROXY_SERVER,verify=False)
             s2.post(PROXY_SERVER,data=proxy_data,verify=False)
-            if not os.path.isdir('./PDF/' + BRANCH + '/' + SEM + '/' + str(year)):
-                os.makedirs('./PDF/' + BRANCH + '/'+ SEM + '/' + str(year))
+            if not os.path.isdir(DIRECTORY + str(year)):
+                os.makedirs(DIRECTORY + str(year))
             for j in URLs:
                 r = s2.get(j,verify=False,stream=True)
-                name = './PDF/' + BRANCH + '/' + SEM + '/' + str(year) + '/' + unquote(j.split('/')[-1])
+                name = DIRECTORY + str(year) + '/' + unquote(j.split('/')[-1])
                 with open(name,"wb") as f:
                     f.write(r.content)
                 f.close()
