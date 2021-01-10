@@ -1,6 +1,6 @@
 from flask.helpers import url_for
 import requests
-import uvicorn
+import gunicorn
 import shutil
 import os
 import re
@@ -139,6 +139,3 @@ def download():
     return Response(data, headers={
         'Content-Type': 'application/zip',
         'Content-Disposition': 'attachment; filename=%s.zip;'%name})
-
-if __name__ == '__main__':
-    app.run()

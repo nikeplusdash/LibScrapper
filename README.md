@@ -1,6 +1,8 @@
-# LIBPORTAL PDF STEALER
+# MIT-LIBPORTAL PDF DOWNLOADER
 
-Download all old question papers from Library Portal of MIT Manipal
+Download all old question papers from Library Portal of MIT Manipal from the python file or from [here](https://library-dl.herokuapp.com/) !Remember to dowload or else the file will not be deleted from server!
+
+![img](LibScrap.png)
 
 If any issues please report
 
