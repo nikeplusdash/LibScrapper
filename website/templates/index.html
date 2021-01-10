@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
+        body {
+            background-color: white;
+            font-family: 'Raleway', sans-serif;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            margin: auto;
+            overflow: hidden;
+        }
+        .container {
+            width: 100%;
+            height: 75%;
+            display: flex;
+            align-self: center;
+            margin: 20px;
+            text-align: center;
+        }
+        .row {
+            display: flex;
+            width: 30%;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .go {
+            display: flex;
+            width: 10%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            transition: all 2s ease-in-out;
+        }
+        select {
+            padding: 12px;
+            margin: 10px;
+        }
+        button[type="submit"] {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            border-style: none;
+            background-color: black;
+            color: white;
+            font-size: xx-large;
+        }
+        .scaleUp {
+            animation: scaleUp 350ms forwards ease-in-out;
+        }
+        .diminish{
+            animation: diminish 350ms forwards ease-in-out;
+            animation-delay: 20ms;
+        }
+        form {
+            display: contents;
+        }
+        @keyframes scaleUp {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(100);
+            }
+        }
+        @keyframes diminish {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0);
+            }
+        }
+        .box {
+            background-color: black;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            margin: 0;
+            font-size: 24pt;
+        }
+        .display {
+            color: white;
+            width: 100%;
+            height: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+        }     
+        @keyframes fadeIn {
+            0% {
+                opacity: 0%;
+                transform: translate(0,10px);
+            }
+            100% {
+                opacity: 100%;
+                transform: translate(0,0px);
+            }
+        }
+        @keyframes fadeOut {
+            0% {
+                opacity: 100%;
+                transform: translate(0,0px);
+            }
+            100% {
+                opacity: 0%;
+                transform: translate(0,-10px);
+            }
+        }
+        .fadeIn {
+            animation: fadeIn 350ms forwards ease-in-out;
+        }
+        .fadeOut {
+            animation: fadeOut 100ms forwards ease-in-out;
+        }
+        @media (max-width: 750px) {
+            .display {
+                width: 100%;
+                height: 100%;
+                align-self: center;
+                justify-content: center;
+                flex-direction: column;
+                margin: 8px;
+                text-align: center;
+            }
+            .container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-self: center;
+                justify-content: center;
+                flex-direction: column;
+                margin: 8px;
+                text-align: center;
+            }
+            .row {
+                display: flex;
+                width: 100%;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .go {
+                align-self: center;
+                z-index: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="box" id="box">
+        <div class="display" id="text"></div>
+    </div>
+    <div class="container" id="con">
+        <form method="POST" action="/submit" class="input">
+            <div class="year row">
+                <label for="from">From year</label>
+                <select name="from" id="lyear">
+                    {% for i in year %}<option value={{ i }}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+                <label for="to">To Year</label>
+                <select name="to" id="uyear">
+                    {% for i in year %}<option value={{ i }}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="sem row">
+                <label for="sem">Semester</label>
+                <select name="sem">
+                    {% for i in sem %}<option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="branch row">
+                <label for="branch">Branch</label>
+                <select name="branch">
+                    {% for i in branch %}<option value={{ i }}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="go">
+                <button type="submit" id="but">></button>
+            </div>
+        </form>
+    </div>
+    <script>
+        var button = document.getElementById("but")
+        button.addEventListener('click', e => {
+            e.preventDefault()
+            var form = document.getElementsByClassName('input')[0]
+            l_year = parseInt(form[0].value)
+            u_year = parseInt(form[1].value)
+            sem = form[2].value
+            branch = form[3].value
+            if (l_year > u_year) {
+                document.getElementById('lyear').setCustomValidity('Should be less than ' + u_year)
+                document.getElementById('uyear').setCustomValidity('Should be greater than ' + l_year)
+                document.forms[0].checkValidity()
+                document.forms[0].reportValidity()
+            }
+            else {
+                button.classList.add("scaleUp")
+                button.innerText = ""
+                button.addEventListener('animationend',() => {
+                    document.getElementById("con").style.display = 'none'
+                    document.getElementById("box").style.display = 'flex'
+                    document.forms[0].submit()
+                })
+                var text = ['Just a moment','Downloading all your files, please do not exit','Almost there','A few more seconds','Almost Done']
+                var i = 0
+                var display = document.getElementById("text")
+                setInterval(() => {
+                    display.innerText = text[i%5]
+                    display.classList.remove("fadeOut");
+                    display.classList.add("fadeIn")
+                    setTimeout(() => {
+                        display.classList.remove("fadeIn");
+                        display.classList.add("fadeOut");
+                        i++;
+                    },3000)
+                },4000)
+            }
+        })
+    </script>
+</body>
+
+</html>
